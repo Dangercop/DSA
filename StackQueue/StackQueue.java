@@ -1,62 +1,65 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package queuestack;
 
-import java.util.NoSuchElementException;
+import java.util.Stack;
 
 public class StackQueue {
-    private stack stack1; // Stack for enqueue operations
-    private stack stack2; // Stack for dequeue operations
+    private Stack<Integer> stack1;
+    private Stack<Integer> stack2;
 
-    // Constructor to initialize both stacks
-    public StackQueue(int size) {
-        stack1 = new Stack(size);
-        stack2 = new Stack(size);
+    public StackQueue() {
+        stack1 = new Stack<>();
+        stack2 = new Stack<>();
     }
 
-    // Enqueue an element into the queue
-    public void enqueue(int x) {
-        stack1.push(x);
+    public void enQueue(int data) {
+        stack1.push(data);
     }
 
-    // Dequeue an element from the queue
-    public int dequeue() {
-        if (isEmpty()) {
-            throw new NoSuchElementException("Queue is empty!");
-        }
+    public int deQueue() {
+        if (isEmpty())
+            throw new IllegalStateException("Queue is empty");
 
-        // If stack2 is empty, transfer elements from stack1 to stack2
         if (stack2.isEmpty()) {
             while (!stack1.isEmpty()) {
                 stack2.push(stack1.pop());
             }
         }
-
-        // Pop and return the top element from stack2
         return stack2.pop();
     }
 
-    // Peek at the front element of the queue
-    public int peek() {
-        if (isEmpty()) {
-            throw new IllegalStateException("Queue is empty");
-        }
-
-        // If stack2 is empty, transfer elements from stack1 to stack2
-        if (stack2.isEmpty()) {
-            while (!stack1.isEmpty()) {
-                stack2.push(stack1.pop());
-            }
-        }
-
-        // Peek at the top element of stack2
-        return stack2.peek();
-    }
-
-    // Check if the queue is empty
     public boolean isEmpty() {
         return stack1.isEmpty() && stack2.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder("[");
+        for (int i = 0; i < stack2.size(); i++) {
+            result.append(stack2.get(i));
+            if (i < stack2.size() - 1) result.append(", ");
+        }
+        for (int i = stack1.size() - 1; i >= 0; i--) {
+            if (result.length() > 1) result.append(", ");
+            result.append(stack1.get(i));
+        }
+        result.append("]");
+        return result.toString();
+    }
+
+    public static void main(String[] args) {
+        StackQueue queue = new StackQueue();
+        queue.enQueue(1);
+        queue.enQueue(2);
+        queue.enQueue(3);
+        System.out.println(queue);  
+
+        queue.deQueue();
+        System.out.println(queue);  
+
+        queue.enQueue(4);
+        queue.enQueue(5);
+        System.out.println(queue);  
+
+        queue.deQueue();
+        System.out.println(queue);  
     }
 }
